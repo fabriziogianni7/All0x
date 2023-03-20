@@ -1,0 +1,217 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_customerID",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_customerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_productIDs",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_totalPaid",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_tokenPaidAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_tokenPaidSymbol",
+				"type": "string"
+			}
+		],
+		"name": "recordTransaction",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "getAllTransactions",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "txID",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "customerID",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "customerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "productIDs",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalPaid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "tokenPaidAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "tokenPaidSymbol",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timeStamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct Ledger.Transaction[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "txID",
+				"type": "uint256"
+			}
+		],
+		"name": "getTransaction",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "transactions",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "txID",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "string",
+				"name": "customerID",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "customerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalPaid",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "tokenPaidAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "tokenPaidSymbol",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timeStamp",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
