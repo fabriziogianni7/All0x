@@ -5,7 +5,7 @@ import { ProductToBuy } from '@/pages/payment';
 
 
 
-const SeparatorDemo = (props: {
+const ProductTab = (props: {
   products: ProductToBuy[]
 }
 ) => (
@@ -79,4 +79,4 @@ const SeparatorDemo = (props: {
   </div>
 )
 
-export default SeparatorDemo;
+export default ProductTab;

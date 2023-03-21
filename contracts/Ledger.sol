@@ -12,42 +12,46 @@ contract Ledger {
         address customerAddress;
         uint256[] productIDs; //comes from ecommerce
         uint256 totalPaid;
-        address tokenPaidAddress;
-        string tokenPaidSymbol;
+        //address tokenPaidAddress;
+        //string tokenPaidSymbol;
         uint256 timeStamp;
     }
+
+    event TxRecorded  (address indexed owner, uint256 transactionNumber);
 
     constructor(address _owner) {
         owner = _owner;
     }
 
+    // TODO: mshould be able to doublecheck the price
     // Should be possible to pay with any token in the future...
     function recordTransaction(
         string memory _customerID,
-        address _customerAddress,
-        uint256[] memory _productIDs,
-        uint256 _totalPaid,
-        address _tokenPaidAddress,
-        string memory _tokenPaidSymbol
+        // address _customerAddress, // not needed
+        uint256[] memory _productIDs
+        // uint256 _totalPaid,
+        // address _tokenPaidAddress,
+        // string memory _tokenPaidSymbol
     ) public payable {
-        require(msg.value == _totalPaid, "Insufficient funds");
+        //require(msg.value == _totalPaid, "Insufficient funds");
         uint256 _timeStamp = block.timestamp;
         bytes32 _txID = generateID(_customerID, _timeStamp);
 
         Transaction memory newTransaction = Transaction({
             txID: _txID,
             customerID: _customerID,
-            customerAddress: _customerAddress,
+            customerAddress: address(msg.sender),
             productIDs: _productIDs,
-            totalPaid: _totalPaid,
-            tokenPaidAddress: _tokenPaidAddress,
-            tokenPaidSymbol: _tokenPaidSymbol,
+            totalPaid: msg.value,
+           //tokenPaidAddress: _tokenPaidAddress,
+           // tokenPaidSymbol: _tokenPaidSymbol,
             timeStamp: _timeStamp
         });
 
 
         transactionNumber += 1;
         transactions[transactionNumber] = newTransaction;
+        emit TxRecorded(owner,transactionNumber);
     }
 
     function generateID(string memory _customerID, uint256 _timeStamp)
@@ -58,32 +62,30 @@ contract Ledger {
         return keccak256(abi.encodePacked(_customerID, _timeStamp));
     }
 
-    function getTransaction(uint256 txID)
+    function getTransaction(uint256 txID) 
         public
         view
         returns (
+            bytes32,
             string memory,
             address,
             uint256[] memory,
             uint256,
-            address,
-            string memory,
             uint256
         )
     {
         Transaction memory transaction = transactions[txID];
         return (
+            transaction.txID,
             transaction.customerID,
             transaction.customerAddress,
             transaction.productIDs,
             transaction.totalPaid,
-            transaction.tokenPaidAddress,
-            transaction.tokenPaidSymbol,
             transaction.timeStamp
         );
     }
 
-    function getAllTransactions() public view returns (Transaction[] memory){
+    function getAllTransactions() public view returns (Transaction[] memory){ //not working
         uint256 txn = transactionNumber;
         Transaction[] memory txs = new Transaction[](txn);
         for (uint32 i; i<txn; i++){

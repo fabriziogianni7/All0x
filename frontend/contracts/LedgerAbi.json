@@ -7,29 +7,9 @@
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "_customerAddress",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256[]",
 				"name": "_productIDs",
 				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_totalPaid",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "_tokenPaidAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_tokenPaidSymbol",
-				"type": "string"
 			}
 		],
 		"name": "recordTransaction",
@@ -80,16 +60,6 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "address",
-						"name": "tokenPaidAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "tokenPaidSymbol",
-						"type": "string"
-					},
-					{
 						"internalType": "uint256",
 						"name": "timeStamp",
 						"type": "uint256"
@@ -114,6 +84,11 @@
 		"name": "getTransaction",
 		"outputs": [
 			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
@@ -132,16 +107,6 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
 			},
 			{
 				"internalType": "uint256",
@@ -194,16 +159,6 @@
 				"internalType": "uint256",
 				"name": "totalPaid",
 				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "tokenPaidAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "tokenPaidSymbol",
-				"type": "string"
 			},
 			{
 				"internalType": "uint256",

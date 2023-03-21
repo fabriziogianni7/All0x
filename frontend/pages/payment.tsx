@@ -9,7 +9,8 @@ import ComponentGrid from "@/components/home/component-grid";
 import Image from "next/image";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Web3Context } from "context";
-import SeparatorDemo from "@/components/shared/separator";
+import ProductTab from "@/components/shared/product-tab";
+import { ethers } from "ethers";
 
 export type ProductToBuy = {
   name: string,
@@ -23,21 +24,21 @@ const prods: ProductToBuy[] = [
   {
     name: "prodA",
     quantity: 1,
-    price: 15,
+    price: 0,
     prodId: "prodIdRand1234"
   },
-  {
-    name: "prodB",
-    quantity: 1,
-    price: 7.50,
-    prodId: "prodIdRand1235"
-  },
-  {
-    name: "prodc",
-    quantity: 1,
-    price: 1,
-    prodId: "prodIdRand1236"
-  }
+  // {
+  //   name: "prodB",
+  //   quantity: 1,
+  //   price: 7.50,
+  //   prodId: "prodIdRand1235"
+  // },
+  // {
+  //   name: "prodc",
+  //   quantity: 1,
+  //   price: 1,
+  //   prodId: "prodIdRand1236"
+  // }
 ]
 export default function Payment() {
   const { initLedgerTestContract } = useContext(Web3Context)
@@ -47,21 +48,60 @@ export default function Payment() {
 
 
   useEffect(() => {
-    calcButtonPrice()
+    const price = prods.reduce((acc: number, p: ProductToBuy) => acc += p.price, 0)
+    setButtonPrice(price)
 
   })
 
   const initLedger = async () => {
-    ledger = await initLedgerTestContract()
+    try {
+      
+      ledger = await initLedgerTestContract()
+      ledger.on("TxRecorded", (owner:any , transactionNumber:any,)=>{
+        let transferEvent ={
+            owner,
+            transactionNumber,
+        }
+        console.log(JSON.stringify(transferEvent, null, 4))
+        alert(JSON.stringify(transferEvent))
+    })
+
+
+
+    } catch (error) {
+       console.log(error)
+    }
   }
 
-  //allows to pay to the ledger contract
-  const recordTransaction = async () => {
+  const pay = async () => {
+    try {
+      const totalAmount: string = await calculateTotalPrice()
+      const tx = await recordTransaction(totalAmount)
+      console.log("transaction", tx)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // call contract. recordtransaction
+  const recordTransaction = async (amount: string) => {
+
     if (!ledger?.current) await initLedger()
 
-    console.log("suca ledfger)", ledger)
-    alert("ciao!")
 
+    try {
+      const options = { value: ethers.parseEther(amount) }
+      const transaction = await ledger?.recordTransaction(
+        "cust123frontend",
+        [1, 2, 3],
+        options)
+  
+  
+      console.log("transaction", transaction)
+      return transaction
+    } catch (error) {
+       console.log(error)
+    }
   }
   /**
    * TODO calculate total price
@@ -72,22 +112,13 @@ export default function Payment() {
    * then I can calculate how much should the user pay converting the price to the total amount of native token
    */
   const calculateTotalPrice = async () => {
-    alert(`
-    TODO calculate total price
-   * should I do it in dollars /euro?
-   * should I do with token selected?
-   * maybe I can just see the price of the native token of the network selected
-   * maybe the pay button should open a modal where user can choose between the networks
-   * then I can calculate how much should the user pay converting the price to the total amount of native token`)
-
+    // TODO Implement
+    return buttonPrice.toString()
   }
 
-  const calcButtonPrice = () => {
-   const price =  prods.reduce((acc: number, p:ProductToBuy)=> acc += p.price, 0)
-   setButtonPrice(price)
-  } 
+  //TODO alert when transaction is executed
 
-  //TODO add a box where to add the product INFO
+
 
   return (
     <Layout>
@@ -138,7 +169,7 @@ export default function Payment() {
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
 
-          <SeparatorDemo products={prods} />
+          <ProductTab products={prods} />
         </motion.div>
         <motion.div
           className="mx-auto mt-6 flex items-center justify-center space-x-5"
@@ -146,8 +177,7 @@ export default function Payment() {
         >
           <a
             className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
-            // href={DEPLOY_URL}
-            onClick={() => calculateTotalPrice()}
+            onClick={() => pay()}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -167,91 +197,12 @@ export default function Payment() {
             </svg>
             <p>Pay {buttonPrice}$</p>
           </a>
-          {/* <a
-            className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
-            href="https://github.com/steven-tey/precedent"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Github />
-            <p>Star on GitHub</p>
-          </a> */}
         </motion.div>
       </motion.div>
       {/* here we are animating with Tailwind instead of Framer Motion because Framer Motion messes up the z-index for child components */}
       <div className="my-10 grid w-full max-w-screen-xl animate-[slide-down-fade_0.5s_ease-in-out] grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {/* {features.map(({ title, description, demo, large }) => (
-          <Card
-            key={title}
-            title={title}
-            description={description}
-            demo={
-              title === "Beautiful, reusable components" ? (
-                <ComponentGrid />
-              ) : (
-                demo
-              )
-            }
-            large={large}
-          />
-        ))} */}
       </div>
     </Layout>
   );
 }
 
-// const features = [
-//   {
-//     title: "Beautiful, reusable components",
-//     description:
-//       "Pre-built beautiful, a11y-first components, powered by [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/), and [Framer Motion](https://framer.com/motion)",
-//     large: true,
-//   },
-//   {
-//     title: "Performance first",
-//     description:
-//       "Built on [Next.js](https://nextjs.org/) primitives like `@next/font` and `next/image` for stellar performance.",
-//     demo: <WebVitals />,
-//   },
-//   {
-//     title: "One-click Deploy",
-//     description:
-//       "Jumpstart your next project by deploying All0x to [Vercel](https://vercel.com/) in one click.",
-//     demo: (
-//       <a href={DEPLOY_URL}>
-//         {/* eslint-disable-next-line @next/next/no-img-element */}
-//         <img
-//           src="https://vercel.com/button"
-//           alt="Deploy with Vercel"
-//           width={120}
-//         />
-//       </a>
-//     ),
-//   },
-//   {
-//     title: "Built-in Auth + Database",
-//     description:
-//       "All0x comes with authentication and database via [Auth.js](https://authjs.dev/) + [Prisma](https://prisma.io/)",
-//     demo: (
-//       <div className="flex items-center justify-center space-x-20">
-//         <Image alt="Auth.js logo" src="/authjs.webp" width={50} height={50} />
-//         <Image alt="Prisma logo" src="/prisma.svg" width={50} height={50} />
-//       </div>
-//     ),
-//   },
-//   {
-//     title: "Hooks, utilities, and more",
-//     description:
-//       "All0x offers a collection of hooks, utilities, and `@vercel/og`",
-//     demo: (
-//       <div className="grid grid-flow-col grid-rows-3 gap-10 p-10">
-//         <span className="font-mono font-semibold">useIntersectionObserver</span>
-//         <span className="font-mono font-semibold">useLocalStorage</span>
-//         <span className="font-mono font-semibold">useScroll</span>
-//         <span className="font-mono font-semibold">nFormatter</span>
-//         <span className="font-mono font-semibold">capitalize</span>
-//         <span className="font-mono font-semibold">truncate</span>
-//       </div>
-//     ),
-//   },
-// ];
