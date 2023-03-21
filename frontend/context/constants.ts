@@ -12,8 +12,8 @@ export const POLYGON_MUMBAI = {
                 blockExplorerUrls: ["https://mumbai.polygonscan.com"]
             }
 export const POLYGON_ID = 80001
-export const LEDGER_FACTORY_CONTRACT = "0x720b67535A3331dd336f13d506D5EeDEf12497eb"
-export const LEDGER_TEST_CONTRACT = "0xBB8a482eDC5f97aBCb7902B7c3c8729d6b16348c"
+export const LEDGER_FACTORY_CONTRACT = "0x2fe3Bf6737Ba330fC25512E67b2F7c8aCA167B8f"
+export const LEDGER_TEST_CONTRACT = "0x4476EeD4DA0C7d6dB60B5066Bb72811610B07c07"
 
 export const LEDGER_FACTORY_CONTRACT_ABI = LedgerFactoryContractAbi
 export const LEDGER_TEST_ABI = LedgerAbi
