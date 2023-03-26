@@ -5,10 +5,15 @@ import "./Ledger.sol";
 
 contract LedgerFactory {
     mapping(address => address) public ledgers;
+    event LedgerCreated(address indexed owner, string name);
 
-    function createLedger() public returns (address) {
-        Ledger newLedger = new Ledger(msg.sender);
+    function createLedger(string memory _name, address _token)
+        public
+        returns (address)
+    {
+        Ledger newLedger = new Ledger(msg.sender, _name, _token);
         ledgers[msg.sender] = address(newLedger);
+        emit LedgerCreated(msg.sender, _name);
         return address(newLedger);
     }
 

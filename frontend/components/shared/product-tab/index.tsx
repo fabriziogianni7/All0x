@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Separator from '@radix-ui/react-separator';
 import './separator-style.module.css'
-import { ProductToBuy } from '@/pages/payment';
+import { ProductToBuy } from '@/pages/payment/normalPayment';
 
 
 
@@ -47,9 +47,9 @@ const ProductTab = (props: {
     </div>
     <Separator.Root className="SeparatorRoot" style={{ margin: '15px 0' }} />
     {
-      props.products.map((product: ProductToBuy) => {
+      props.products.map((product: ProductToBuy, i:number) => {
         return (
-          <div style={{ display: 'flex', height: 20, alignItems: 'center' }}>
+          <div key={i} style={{ display: 'flex', height: 20, alignItems: 'center' }}>
             <div className="Text">{product.name}</div>
             <Separator.Root
               className="SeparatorRoot"

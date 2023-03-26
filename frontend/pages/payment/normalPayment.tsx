@@ -7,10 +7,14 @@ import { Github, Twitter } from "@/components/shared/icons";
 import WebVitals from "@/components/home/web-vitals";
 import ComponentGrid from "@/components/home/component-grid";
 import Image from "next/image";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Web3Context } from "context";
 import ProductTab from "@/components/shared/product-tab";
 import { ethers } from "ethers";
+import { LEDGER_TEST_CONTRACT } from "context/constants";
+import { create, SdkConfig } from "@connext/sdk";
+import { useRouter } from 'next/router'
+
 
 export type ProductToBuy = {
   name: string,
@@ -27,49 +31,74 @@ const prods: ProductToBuy[] = [
     price: 0,
     prodId: "prodIdRand1234"
   },
-  // {
-  //   name: "prodB",
-  //   quantity: 1,
-  //   price: 7.50,
-  //   prodId: "prodIdRand1235"
-  // },
-  // {
-  //   name: "prodc",
-  //   quantity: 1,
-  //   price: 1,
-  //   prodId: "prodIdRand1236"
-  // }
+  {
+    name: "prodB",
+    quantity: 1,
+    price: 0,
+    prodId: "prodIdRand1234"
+  }
 ]
-export default function Payment() {
-  const { initLedgerTestContract } = useContext(Web3Context)
+
+/**
+ * @FLOW this component should have all necessary element in the url
+ * eleme nts:
+ * merchant network id 
+ * merchant ledger address
+ * prod data
+ * need this to format the prods in the button :
+ * encodeURIComponent(JSON.stringify(prods).replace(/"([^"]+)":/g, '$1:'))
+ * testURL: 
+ * http://localhost:3000/payment/0x61bAfaDB21adF54D1f9BfBA92d2E463b042894eF?shop=xyzShop&networkId=80001&prods=%5B%7B%22name%22%3A%22prodA%22%2C%22quantity%22%3A1%2C%22price%22%3A5%2C%22prodId%22%3A%22prodIdRand1234%22%7D%2C%7B%22name%22%3A%22prodB%22%2C%22quantity%22%3A1%2C%22price%22%3A5%2C%22prodId%22%3A%22prodIdRand1234%22%7D%5D
+ * 
+ * http://localhost:3000/payment/0x61bAfaDB21adF54D1f9BfBA92d2E463b042894eF?%7B%22shop%22%3A%22xyzShop%22%2C%22network%22%3A%2280001%22%7D&%5B%7Bname%3A%22prodA%22%2Cquantity%3A1%2Cprice%3A0%2CprodId%3A%22prodIdRand1234%22%7D%2C%7Bname%3A%22prodB%22%2Cquantity%3A1%2Cprice%3A0%2CprodId%3A%22prodIdRand1234%22%7D%5D
+ * 
+ */
+export default function Payment(): JSX.Element {
+  const { initLedgerTestContract, account } = useContext(Web3Context)
   let ledger: any = useRef();
   const [buttonPrice, setButtonPrice] = useState<number>(0)
+  const [_ledger, _setLedger] = useState<any>()
+  const [products, setProds] = useState<any>()
+  const router = useRouter()
+  const queryString = router.query
 
 
 
   useEffect(() => {
-    const price = prods.reduce((acc: number, p: ProductToBuy) => acc += p.price, 0)
-    setButtonPrice(price)
 
-  })
+    console.log(encodeURIComponent(JSON.stringify(prods)))
 
+    if (queryString?.prods) {
+      const decod = decodeURIComponent(queryString?.prods as string)
+      const prodsDecoded = JSON.parse(decod) as ProductToBuy[]
+      setProds(prodsDecoded)
+      const price = prodsDecoded.reduce((acc: number, p: ProductToBuy) => acc += p.price, 0)
+      setButtonPrice(price)
+    }
+
+  }, [_ledger, queryString])
+
+
+
+  /**
+   * @FLOW  this function should do direct calls to the contract if who is paying has the same network of the merchant otherwise should use connext
+   */
   const initLedger = async () => {
+
     try {
-      
-      ledger = await initLedgerTestContract()
-      ledger.on("TxRecorded", (owner:any , transactionNumber:any,)=>{
-        let transferEvent ={
-            owner,
-            transactionNumber,
-        }
-        console.log(JSON.stringify(transferEvent, null, 4))
-        alert(JSON.stringify(transferEvent))
-    })
+      // if (false) { //I KNOW! testing xcalls
+      ledger = await initLedgerTestContract(queryString.merchant as string)
+      console.log("ledger:", ledger)
+      _setLedger(ledger)
 
-
+      const filters = ledger.filters.TxRecorded(account)
+      ledger.on(filters, (owner: any) => {
+        alert(`Payment successful,
+        * TODO: make a nice modal here!`)
+      })
 
     } catch (error) {
-       console.log(error)
+      console.log(error)
     }
   }
 
@@ -90,17 +119,19 @@ export default function Payment() {
 
 
     try {
-      const options = { value: ethers.parseEther(amount) }
+      const options = { value: ethers.utils.parseEther(amount) }
       const transaction = await ledger?.recordTransaction(
         "cust123frontend",
         [1, 2, 3],
         options)
-  
-  
-      console.log("transaction", transaction)
+
+
+
+
+      // console.log("transaction", transaction)
       return transaction
     } catch (error) {
-       console.log(error)
+      console.log(error)
     }
   }
   /**
@@ -115,10 +146,6 @@ export default function Payment() {
     // TODO Implement
     return buttonPrice.toString()
   }
-
-  //TODO alert when transaction is executed
-
-
 
   return (
     <Layout>
@@ -137,7 +164,7 @@ export default function Payment() {
           },
         }}
       >
-        <motion.a
+        {/* <motion.a
           variants={FADE_DOWN_ANIMATION_VARIANTS}
           // href="https://twitter.com/steventey/status/1613928948915920896"
           target="_blank"
@@ -149,12 +176,12 @@ export default function Payment() {
           <p className="text-sm font-semibold text-[#1d9bf0]">
             get Ledger contract
           </p>
-        </motion.a>
+        </motion.a> */}
         <motion.h1
           className="bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-7xl md:leading-[5rem]"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <Balancer>Pay With All0x</Balancer>
+          <Balancer>Pay to {queryString.shop} With All0x</Balancer>
         </motion.h1>
         <motion.p
           className="mt-6 text-center text-gray-500 md:text-xl"
@@ -169,14 +196,14 @@ export default function Payment() {
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
 
-          <ProductTab products={prods} />
+          <ProductTab products={products ? products : []} />
         </motion.div>
         <motion.div
           className="mx-auto mt-6 flex items-center justify-center space-x-5"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
           <a
-            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
+            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black cursor-pointer"
             onClick={() => pay()}
             target="_blank"
             rel="noopener noreferrer"

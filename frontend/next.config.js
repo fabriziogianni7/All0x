@@ -5,6 +5,10 @@ const nextConfig = {
   images: {
     domains: ["lh3.googleusercontent.com"],
   },
+  webpack: (config) => {
+    config.resolve.fallback = { fs: false };
+    return config;
+  },
   async redirects() {
     return [
       {

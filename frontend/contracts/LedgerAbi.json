@@ -2,31 +2,36 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			},
+			{
 				"internalType": "string",
-				"name": "_customerID",
+				"name": "_name",
 				"type": "string"
 			},
 			{
-				"internalType": "uint256[]",
-				"name": "_productIDs",
-				"type": "uint256[]"
-			}
-		],
-		"name": "recordTransaction",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
-				"name": "_owner",
+				"name": "_token",
 				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "TxRecorded",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -119,10 +124,54 @@
 	},
 	{
 		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "owner",
 		"outputs": [
 			{
 				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_customerID",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_productIDs",
+				"type": "uint256[]"
+			}
+		],
+		"name": "recordTransaction",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "token",
+		"outputs": [
+			{
+				"internalType": "contract IERC20",
 				"name": "",
 				"type": "address"
 			}
@@ -167,6 +216,50 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_transferId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_asset",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_originSender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "_origin",
+				"type": "uint32"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_callData",
+				"type": "bytes"
+			}
+		],
+		"name": "xReceive",
+		"outputs": [
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

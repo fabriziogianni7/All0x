@@ -3,9 +3,9 @@ import Head from "next/head";
 const DOMAIN = "https://precedent.dev";
 
 export default function Meta({
-  title = "All0x - Pay forever with crypto",
-  description = "All0x is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
-  image = `${DOMAIN}/api/og`,
+  title = "All0x - crosschain payments with crypto",
+  description = "Merchants can integrate All0x in their website.Customers can use All0x to pay with crypto, even in different chains",
+  image = `/All0xLogo.png`,
 }: {
   title?: string;
   description?: string;
@@ -20,7 +20,7 @@ export default function Meta({
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta itemProp="image" content={image} />
-      <meta property="og:logo" content={`${DOMAIN}/logo.png`}></meta>
+      <meta property="og:logo" content={`/All0xLogo.png`}></meta>
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />

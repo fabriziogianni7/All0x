@@ -7,11 +7,15 @@ import { Github, Twitter } from "@/components/shared/icons";
 import WebVitals from "@/components/home/web-vitals";
 import ComponentGrid from "@/components/home/component-grid";
 import Link from 'next/link'
+import { PAYMENT_EXPERIENCE_URL } from "context/constants";
 
 export default function Home() {
   return (
     <Layout>
       <motion.div
+        // style={{
+        //   backgroundImage: "url('/All0xLogo.png')"
+        // }}
         className="max-w-xl px-5 xl:px-0"
         initial="hidden"
         whileInView="show"
@@ -59,40 +63,50 @@ export default function Home() {
           className="mx-auto mt-6 flex items-center justify-center space-x-5"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <a href="/payment"  className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
-              target="_blank"
-              rel="noopener noreferrer">
-              <svg
-                className="h-4 w-4 group-hover:text-black"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 4L20 20H4L12 4Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Register your e-commerce
+          <a href={PAYMENT_EXPERIENCE_URL} className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black cursor-pointer"
+            target="_blank"
+            rel="noopener noreferrer">
+            <img
+              className=" h-4 w-4 group-hover:text-black"
+              src="/All0xLogo.png"
+              alt="Try Out All0x Payment Experience"
+            />
+            <p>Try All0x With Connext</p>
           </a>
           <a
             className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
-            href="https://github.com/fabriziogianni7/All0x"
+            href="/create-account"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              className=" h-4 w-4 group-hover:text-black"
+              src="/All0xLogo.png"
+              alt="Try Out All0x Payment Experience"
+            />
+            {/* <Github /> */}
+            <p>Create All0x Account </p>
+          </a>
+        </motion.div>
+        <motion.div
+          className="mx-auto mt-6 flex items-center justify-center space-x-5"
+          variants={FADE_DOWN_ANIMATION_VARIANTS}
+        >
+          {/* <a
+            className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
+            href="/create-account"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Github />
-            <p>Star All0x on GitHub</p>
-          </a>
+            <p>Get your account data</p>
+          </a> */}
         </motion.div>
       </motion.div>
-      
+
       {/* here we are animating with Tailwind instead of Framer Motion because Framer Motion messes up the z-index for child components */}
-      <div className="my-10 grid w-full max-w-screen-xl animate-[slide-down-fade_0.5s_ease-in-out] grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        {features.map(({ title, description, demo, large }) => (
+      <div className="my-10 grid w-full max-w-screen-xl animate-[slide-down-fade_0.5s_ease-in-out] grid-cols-1 gap-5 px-5 md:grid-cols-2 xl:px-0 ">
+        {features.map(({ title, description, demo }) => (
           <Card
             key={title}
             title={title}
@@ -104,7 +118,7 @@ export default function Home() {
                 demo
               )
             }
-            large={large}
+          // large={large}
           />
         ))}
       </div>
@@ -113,17 +127,29 @@ export default function Home() {
 }
 
 const features = [
+  // {
+  //   title: "Register as a merchant",
+  //   description:
+  //     "Using all0x is very easy, just create a profile and embed a js button in your e-commerce",
+  //   large: true,
+  // },
+  // {
+  //   title: "Blockchains Natively Supported",
+  //   description:
+  //     "Deployed on xyz chains",
+  //   demo: <WebVitals value={15} />,
+  // },
   {
-    title: "Register as a merchant",
-    description:
-      "Using all0x is very easy, just create a profile and embed a js button in your e-commerce",
-    large: true,
-  },
-  {
-    title: "15 Blockchain supported",
+    title: "Cross-Chains enabled thanks to Connext",
     description:
       "Built on Connext to enable cross-chain payments.",
-    demo: <WebVitals />,
+    demo: <WebVitals value={4} />,
+  },
+  {
+    title: "Transactions Made with All0x",
+    description:
+      "Pay everywhere with any stablecoins",
+    demo: <WebVitals value={200} />,
   },
   // {
   //   title: "One-click Deploy",

@@ -3,18 +3,21 @@ import { ethers } from 'ethers';
 import { LEDGER_FACTORY_CONTRACT_ABI, LEDGER_FACTORY_CONTRACT, LEDGER_TEST_CONTRACT, POLYGON_MUMBAI, LEDGER_TEST_ABI } from './constants';
 
 interface Web3ContextType {
-    provider?: ethers.BrowserProvider
-    connectSigner: () => void
+    provider?: ethers.providers.Web3Provider
+    signer?: ethers.providers.JsonRpcSigner
     account?: any
+    connectSigner: () => void
     connectToDefaultNetwork: () => any
-    initLedgerTestContract: () => any
+    initLedgerTestContract: (merchant_ledger:string) => any
 }
 
 export const Web3Context = createContext<Web3ContextType>({
-    connectSigner: () => { },
     account: "",
+    provider: {} as ethers.providers.Web3Provider,
+    signer:{} as ethers.providers.JsonRpcSigner,
+    connectSigner: () => { },
     connectToDefaultNetwork: () => { },
-    initLedgerTestContract: () => { }
+    initLedgerTestContract: (merchant_ledger:string) => { }
 });
 
 
@@ -41,7 +44,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         // subscribing to wallet events:
         accChangedEvent()
 
-       
+
 
 
 
@@ -55,13 +58,13 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         if (!window.ethereum)
             alert("MetaMask not installed; using read-only defaults");
         else {
-            provider.current = new ethers.BrowserProvider(window.ethereum);
+            provider.current = new ethers.providers.Web3Provider(window.ethereum);
         }
     }
 
     const checkAccountAndSigner = () => {
         if (!localStorage.getItem("account")) {
-            connectAccount();
+            connectSigner();
         } else {
             _setAccount(localStorage.getItem("account"));
             getSigner();
@@ -78,7 +81,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const connectAccount = async () => {
+    const connectSigner = async () => {
         try {
             const accs = await provider?.current.send('eth_requestAccounts', [])
             localStorage.setItem("account", accs[0])
@@ -111,15 +114,16 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         })
     }
 
-    const initLedgerTestContract = async () => {
+    const initLedgerTestContract = async (merchant_ledger:string) => {
         try {
-            if (!signer){
+            if (!signer) {
                 await getSigner()
             }
 
-            const testLedger = new ethers.Contract(LEDGER_TEST_CONTRACT,LEDGER_TEST_ABI,signer.current)
-            console.log("contract ledger is here")
-            return testLedger
+            const ledger = new ethers.Contract(merchant_ledger, LEDGER_TEST_ABI, signer.current)
+
+
+            return ledger
 
         } catch (error) {
             console.log(error)
@@ -129,8 +133,10 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
 
 
     return (<Web3Context.Provider value={{
-        connectSigner: connectAccount,
         account: _account,
+        provider: provider.current,
+        signer: signer.current,
+        connectSigner,
         connectToDefaultNetwork,
         initLedgerTestContract
     }}>

@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import useScroll from "@/lib/hooks/use-scroll";
 import Meta from "./meta";
 import { useSignInModal } from "./sign-in-modal";
@@ -27,6 +27,7 @@ export default function Layout({
   const { SignInModal, setShowSignInModal } = useSignInModal();
   const scrolled = useScroll(50);
   const { account, connectSigner } = useContext(Web3Context);
+  // useEffect(() => { setShowSignInModal(true) })
 
   return (
     <>
@@ -39,10 +40,12 @@ export default function Layout({
           : "bg-white/0"
           } z-30 transition-all`}
       >
-        <div className="mx-5 flex h-16 max-w-screen-xl items-center justify-between xl:mx-auto">
+
+        <div className="mx-5 flex h-16 max-w-screen-xl items-center justify-between xl:mx-auto"
+        >
           <Link href="/" className="flex items-center font-display text-2xl">
             <Image
-              src="/logo.png"
+              src="/All0xLogo.png"
               alt="All0x logo"
               width="30"
               height="30"
@@ -61,7 +64,7 @@ export default function Layout({
                   {...FADE_IN_ANIMATION_SETTINGS}
                 >
                   {
-                    account ? account : "Connect Wallet"
+                    account == "undefined" || !account ? "Connect Wallet" : account
                   }
                   {/* Sign In  */}
                 </motion.button>
@@ -72,7 +75,9 @@ export default function Layout({
           </div>
         </div>
       </div>
-      <main className="flex w-full flex-col items-center justify-center py-32 ">
+      <main className="flex w-full flex-col items-center justify-center py-32 "
+
+      >
         {children}
       </main>
       <div className="relative bottom-0 w-full border-t border-gray-200 bg-white p-12 text-center  ">
@@ -87,6 +92,7 @@ export default function Layout({
             by Fabriziogianni7
           </a>
         </p>
+
       </div>
     </>
   );
