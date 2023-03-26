@@ -19,7 +19,7 @@ export const LEDGER_TEST_CONTRACT = "0x956750Dd93c28Ca4faf032278CD03A8D9817b000"
 export const LEDGER_FACTORY_CONTRACT_ABI = LedgerFactoryContractAbi
 export const LEDGER_TEST_ABI = LedgerAbi
 
-export const PAYMENT_EXPERIENCE_URL = `http://localhost:3000/payment/0x956750Dd93c28Ca4faf032278CD03A8D9817b000?shop=xyzShop&networkId=80001&prods=%5B%7B%22name%22%3A%22prodA%22%2C%22quantity%22%3A1%2C%22price%22%3A5%2C%22prodId%22%3A%22prodIdRand1234%22%7D%2C%7B%22name%22%3A%22prodB%22%2C%22quantity%22%3A1%2C%22price%22%3A5%2C%22prodId%22%3A%22prodIdRand1234%22%7D%5D`
+export const PAYMENT_EXPERIENCE_URL = `https://all0x-4d03fa.spheron.app/payment/0x956750Dd93c28Ca4faf032278CD03A8D9817b000?shop=xyzShop&networkId=80001&prods=%5B%7B%22name%22%3A%22prodA%22%2C%22quantity%22%3A1%2C%22price%22%3A5%2C%22prodId%22%3A%22prodIdRand1234%22%7D%2C%7B%22name%22%3A%22prodB%22%2C%22quantity%22%3A1%2C%22price%22%3A5%2C%22prodId%22%3A%22prodIdRand1234%22%7D%5D`
 
 
 export const SDK_CONFIG: SdkConfig = {
