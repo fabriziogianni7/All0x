@@ -12,9 +12,9 @@ This MVP is done using Solidity, Nextjs, and Connext
 
 The smart contracts:
 
-LedgerFactoryContract: A factory contracts aloowing users to create accounts (ledger contracts);
+> LedgerFactoryContract: A factory contracts aloowing users to create accounts (ledger contracts);
 
-LedgerContract: It's the account of the e-commerce. it contains all the transactions and is owned by the e-commerce.
+> LedgerContract: It's the account of the e-commerce. it contains all the transactions and is owned by the e-commerce.
 It contains the Xcall to be called with Connext
 
 
